@@ -97,28 +97,55 @@ void drawFloor()
     pair<int, int> z = { max( -floorSize.first / 2, (int) myROV -> pos[2] / 10 - viewSize ),
                          min(  floorSize.first / 2, (int) myROV -> pos[2] / 10 + viewSize ) };
 
-    for( int i = x.first; i < x.second ; i ++ )
-    {
-        for( int j = z.first; j < z.second; j ++ )
-        {
-            int fi = i + floorSize.first / 2;
-            int fj = j + floorSize.second / 2;
+    // for( int i = x.first; i < x.second ; i ++ )
+    // {
+    //     for( int j = z.first; j < z.second; j ++ )
+    //     {
+    //         int fi = i + floorSize.first / 2;
+    //         int fj = j + floorSize.second / 2;
             
-            glBegin(GL_POLYGON);
-                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj][0]) );
-                glVertex3f( i * 10, 0, j * 10 );
+    //         glBegin(GL_POLYGON);
+    //             glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj][0]) );
+    //             glVertex3f( i * 10, 0, j * 10 );
 
-                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj + 1][0]) );
-                glVertex3f( i * 10, 0, (j + 1) * 10 );
+    //             glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj + 1][0]) );
+    //             glVertex3f( i * 10, 0, (j + 1) * 10 );
 
-                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj + 1][0]) );
-                glVertex3f( (i + 1) * 10, 0, (j + 1) * 10 );
+    //             glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj + 1][0]) );
+    //             glVertex3f( (i + 1) * 10, 0, (j + 1) * 10 );
 
-                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj][0]) );
-                glVertex3f( (i + 1) * 10, 0, j * 10 );
-            glEnd();
-        }
-    }
+    //             glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj][0]) );
+    //             glVertex3f( (i + 1) * 10, 0, j * 10 );
+    //         glEnd();
+    //     }
+    // }
+
+
+	glTexEnvf( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D , textures->id[0] );
+	glMatrixMode( GL_TEXTURE );
+	glLoadIdentity();
+	glMatrixMode( GL_MODELVIEW );
+
+    static float normal[3] = {0.0, 1.0, 0.0};
+    glNormal3fv( normal );
+    static float color[3] = {0.0, 0.5, 0.3};
+    glColor3fv( color );
+
+    glBegin( GL_POLYGON );
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(x.first*10, 0.0, z.first*10);
+
+        glTexCoord2f(0.0, z.second - z.first);
+        glVertex3f(x.first*10, 0.0, z.second*10);
+
+        glTexCoord2f(x.second - x.first, z.second - z.first);
+        glVertex3f(x.second*10, 0.0, z.second*10);
+
+        glTexCoord2f(x.second - x.first, 0.0);
+        glVertex3f(x.second*10, 0.0, z.first*10);
+    glEnd();
+
 }
 
 void drawCave()

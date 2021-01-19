@@ -143,8 +143,6 @@ class ArmLight
 
 void setLight()
 {
-    glShadeModel( GL_SMOOTH );
-    glEnable( GL_NORMALIZE );
     glEnable( GL_LIGHTING );
 
     glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );

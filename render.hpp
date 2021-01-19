@@ -143,6 +143,9 @@ void initWindow()
     glClearColor( 0.05, 0.05, 0.3, 1.0 ); 
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glEnable( GL_DEPTH_TEST );
+    glShadeModel( GL_SMOOTH );
+    glEnable( GL_NORMALIZE );
+    glEnable(GL_TEXTURE_2D );
 
     if( !sphere )
     {
@@ -193,6 +196,14 @@ void initWindow()
     {
         armLight = new ArmLight();
     }
+
+    if( !textures )
+    {
+        textures = new Texture(1);
+    }
+
+    glGenTextures( textures->number, textures->id );
+    textures->setAttributes();
 
     initFloor();
     initFishes();

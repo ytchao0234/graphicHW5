@@ -8,6 +8,7 @@ class Info;
 class SunLight;
 class FishLight;
 class ArmLight;
+class Texture;
 
 void display();
 void reshape( int, int );
@@ -53,8 +54,10 @@ Info *myInfo1 = NULL, *myInfo2 = NULL;
 SunLight *mySun = NULL;
 FishLight *myFish = NULL;
 ArmLight *armLight = NULL;
+Texture *textures = NULL;
 vector<unsigned char> pressingKey;
 
+#include "Texture.hpp"
 #include "models.hpp"
 #include "ROV.hpp"
 #include "lights.hpp"
