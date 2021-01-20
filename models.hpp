@@ -229,7 +229,7 @@ void drawCup( float posX, float posZ, float angle, float size, float colorR, flo
     color[2] = colorB;
 
     static float specular[4] = { 0.3, 0.3, 0.3, 1.0 };
-    static float shininess = 16.0;
+    static float shininess = 64.0;
 
     glPushMatrix();
         glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color );
@@ -246,4 +246,122 @@ void drawCup( float posX, float posZ, float angle, float size, float colorR, flo
             gluDisk( circleObj, 0.0, 2, 12, 1 );
         glPopMatrix();
     glPopMatrix();
+}
+
+void drawCube()
+{
+    const vector<vector<float>> points =
+    {
+        { 0.5, -0.5, -0.5 }, { 0.5, 0.5, -0.5 }, { 0.5, 0.5, 0.5 }, { 0.5, -0.5, 0.5 },
+        { -0.5, -0.5, -0.5 }, { -0.5, 0.5, -0.5 }, { -0.5, 0.5, 0.5 }, { -0.5, -0.5, 0.5 },
+    };
+
+    const vector<vector<int>> faces =
+    {
+        {0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4}, {4, 5, 1, 0}, {5, 6, 2, 1}, {4, 7, 3, 0}
+    };
+
+    const vector<vector<float>> normals =
+    {
+        calNormal( points[faces[0][0]], points[faces[0][1]], points[faces[0][1]], points[faces[0][2]]),
+        calNormal( points[faces[1][0]], points[faces[1][1]], points[faces[1][1]], points[faces[1][2]]),
+        calNormal( points[faces[2][0]], points[faces[2][1]], points[faces[2][1]], points[faces[2][2]]),
+        calNormal( points[faces[3][0]], points[faces[3][1]], points[faces[3][1]], points[faces[3][2]]),
+        calNormal( points[faces[4][0]], points[faces[4][1]], points[faces[4][1]], points[faces[4][2]]),
+        calNormal( points[faces[5][0]], points[faces[5][1]], points[faces[5][1]], points[faces[5][2]]),
+    };
+
+    glEnable(GL_TEXTURE_2D );
+	glTexEnvf( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D , textures->id[2] );
+	glMatrixMode( GL_TEXTURE );
+	glLoadIdentity();
+	glMatrixMode( GL_MODELVIEW );
+
+    int i, j;
+
+    for( i = 0; i < 6; ++i )
+    {
+        glNormal3fv( &(normals[i][0]) );
+
+        glBegin(GL_POLYGON); 
+            glTexCoord2f(0.0, 0.0);
+            glVertex3f( 
+                points[ faces[i][0] ][0], 
+                points[ faces[i][0] ][1], 
+                points[ faces[i][0] ][2]
+            );
+                
+            glTexCoord2f(0.0, 1.0);
+            glVertex3f( 
+                points[ faces[i][1] ][0], 
+                points[ faces[i][1] ][1], 
+                points[ faces[i][1] ][2]
+            );
+
+            if( i == 0 || i == 2 )
+                glTexCoord2f(2.0, 1.0);
+            else if( i == 4 || i == 5 )
+                glTexCoord2f(1.0, 2.0);
+            else
+                glTexCoord2f(1.0, 1.0);
+
+            glVertex3f( 
+                points[ faces[i][2] ][0], 
+                points[ faces[i][2] ][1], 
+                points[ faces[i][2] ][2]
+            );
+
+            if( i == 0 || i == 2 || i == 4 || i == 5 )
+                glTexCoord2f(2.0, 0.0);
+            else
+                glTexCoord2f(1.0, 0.0);
+
+            glVertex3f( 
+                points[ faces[i][3] ][0], 
+                points[ faces[i][3] ][1], 
+                points[ faces[i][3] ][2]
+            );
+        glEnd();
+    }
+
+    glDisable(GL_TEXTURE_2D );
+}
+
+void draw_billboard( float posX, float posZ, float width, float height )
+{
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.5);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture( GL_TEXTURE_2D , textures->id[3] );
+	glMatrixMode( GL_TEXTURE );
+	glLoadIdentity();
+	glMatrixMode( GL_MODELVIEW );
+
+    static float normal[3] = {-myROV->facing[0], -myROV->facing[1], -myROV->facing[2]};
+    glNormal3fv( normal );
+    static float color[4] = {1.0, 1.0, 1.0, 1.0};
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color );
+
+    glBegin(GL_POLYGON);
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(posX + myROV->facing[2] * (width / 2.0), 450.0, posZ - myROV->facing[0] * (width / 2.0));
+
+        glTexCoord2f(1.0, 0.0);
+        glVertex3f(posX - myROV->facing[2] * (width / 2.0), 450.0, posZ + myROV->facing[0] * (width / 2.0));
+
+        glTexCoord2f(1.0, 1.0);
+        glVertex3f(posX - myROV->facing[2] * (width / 2.0), 450.0+height, posZ + myROV->facing[0] * (width / 2.0));
+
+        glTexCoord2f(0.0, 1.0);
+        glVertex3f(posX + myROV->facing[2] * (width / 2.0), 450.0+height, posZ - myROV->facing[0] * (width / 2.0));
+    glEnd();
+
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
 }

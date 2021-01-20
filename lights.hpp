@@ -123,7 +123,7 @@ class ArmLight
         angle( 0.0 ),
         quadratic( 0.0000001 ),
         linear( 0.0000001 ),
-        constant( 0.5 )
+        constant( 0.0 )
     {}
 
     void setPos()
@@ -186,9 +186,9 @@ void setLight()
         glLightfv( GL_LIGHT1, GL_AMBIENT, myFish->ambient );
         glLightfv( GL_LIGHT1, GL_DIFFUSE, myFish->diffuse );
         glLightfv( GL_LIGHT1, GL_SPECULAR, myFish->specular );
-        glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
-        glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
-        glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
+        // glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
+        // glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
+        // glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
     }
     else
     {
@@ -196,9 +196,9 @@ void setLight()
         glLightfv( GL_LIGHT1, GL_AMBIENT, noAmbient );
         glLightfv( GL_LIGHT1, GL_DIFFUSE, noDiffuse );
         glLightfv( GL_LIGHT1, GL_SPECULAR, noSpecular );
-        glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
-        glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
-        glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
+        // glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
+        // glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
+        // glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
     }
     
 
@@ -212,9 +212,9 @@ void setLight()
         glLightfv(GL_LIGHT2, GL_DIFFUSE, armLight->diffuse );
         glLightfv(GL_LIGHT2, GL_SPECULAR, armLight->specular );
         glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, armLight->exponent );
-        glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
-        glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
-        glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
+        // glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
+        // glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
+        // glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
     }
     else
     {
@@ -224,9 +224,8 @@ void setLight()
         glLightfv(GL_LIGHT2, GL_DIFFUSE, noDiffuse );
         glLightfv(GL_LIGHT2, GL_SPECULAR, noSpecular );
         glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 0.0 );
-        glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
-        glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
-        glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
+        // glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
+        // glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
+        // glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
     }
-    
 }

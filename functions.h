@@ -29,6 +29,8 @@ void drawPyramid( bool );
 void drawFish( float, float, float, float, float, float, float, float );
 void drawStone( float, float, float, float, float, float );
 void drawCup( float, float, float, float, float, float, float );
+void drawCube();
+void draw_billboard(float, float, float, float);
 
 void drawScene();
 void drawWCS();
@@ -36,7 +38,7 @@ vector<float> randomColor( bool = true );
 vector<float> randomPos();
 void initFloor();
 void drawFloor();
-void drawCave();
+void drawSeaSurface();
 void initFishes();
 void initFishBlock( int );
 void drawFishes();
@@ -58,8 +60,8 @@ Texture *textures = NULL;
 vector<unsigned char> pressingKey;
 
 #include "Texture.hpp"
-#include "models.hpp"
 #include "ROV.hpp"
+#include "models.hpp"
 #include "lights.hpp"
 #include "background.hpp"
 #include "Info.hpp"

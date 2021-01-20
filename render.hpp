@@ -7,6 +7,7 @@ void display()
 
     pressing();
 
+    float fog_color[]={0.15, 0.20, 0.20, 0.50};
     switch( viewing )
     {
         case OrthoX:
@@ -112,7 +113,17 @@ void display()
             makeProjection( FIRST_VIEW );
             glViewport( windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2 );
             setLight();
+    
+            glEnable(GL_FOG);                /*enable fog fade */
+            glFogi(GL_FOG_MODE, GL_LINEAR);  /*fog factor=GL_LINEAR,GL_EXP,or GL_EXP2*/
+            glFogf(GL_FOG_DENSITY, 0.15);    /*fog opacity(density)= 0.25*/
+            glFogf(GL_FOG_START, 1.0);       /*Setup two ends for GL_LINEAR*/
+            glFogf(GL_FOG_END, 100.0);
+            glFogfv(GL_FOG_COLOR, fog_color);/*set the fog color */
+
             drawScene();
+
+            glDisable(GL_FOG);    
 
             changeLookAt( GOD_VIEW );
             makeProjection( GOD_VIEW );
@@ -145,7 +156,6 @@ void initWindow()
     glEnable( GL_DEPTH_TEST );
     glShadeModel( GL_SMOOTH );
     glEnable( GL_NORMALIZE );
-    glEnable(GL_TEXTURE_2D );
 
     if( !sphere )
     {
@@ -199,7 +209,7 @@ void initWindow()
 
     if( !textures )
     {
-        textures = new Texture(1);
+        textures = new Texture(4);
     }
 
     glGenTextures( textures->number, textures->id );

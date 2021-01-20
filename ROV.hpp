@@ -27,7 +27,7 @@ class ROV
 
         ROV(): pos( { 20.0, 25.0, 20.0 } ),
                limitPos( {{ -2000.0, 2000.0 }, 
-                          { 25.0, 300.0 },
+                          { 25.0, 500.0 },
                           { -2000.0, 2000.0 }} ),
                rotation( { 0.0, 0.0, 1.0, 0.0 } ),
                facing( { 0.0, 0.0, 1.0 } ),
@@ -90,7 +90,7 @@ class ROV
             {
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
-                { 0.7, 0.7, 0.7, 1.0 },
+                { 1.0, 1.0, 1.0, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
@@ -102,7 +102,7 @@ class ROV
 
             shininess =
             {
-                64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0
+                256.0, 256.0, 256.0, 256.0, 256.0, 256.0, 256.0, 256.0, 256.0, 256.0
             };
 
             armEmission = { 0.5, 0.5, 0.5, 1.0 };
@@ -267,7 +267,7 @@ void ROV::drawMainBody()
         glMaterialf( GL_FRONT, GL_SHININESS, shininess[0] );
         
         glScalef( 20.0, 20.0, 40.0 );
-        glutSolidCube( 1.0 );
+        drawCube();
     glPopMatrix();
 }
 
@@ -652,14 +652,6 @@ void ROV::boundPos()
 
     if( pos[2] < limitPos[2].first )       pos[2] = limitPos[2].first;
     else if( pos[2] > limitPos[2].second ) pos[2] = limitPos[2].second;
-
-    if( pos[0] <= 600 && pos[0] >= 450 && pos[1] < 110 && pos[2] <= 1680 && pos[2] >= 690 )
-    {
-        if( pos[0] < 470 )      pos[0] = 470;
-        else if( pos[0] > 580 ) pos[0] = 580;
-
-        if( pos[1] > 55 )       pos[1] = 55;
-    }
 }
 
 void ROV::boundArmLength()

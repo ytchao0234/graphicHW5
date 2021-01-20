@@ -8,7 +8,7 @@ vector<vector<float>> fishPara(20, vector<float>(8));
 vector<vector<vector<float>>> fishBlock(20, vector<vector<float>>(3, vector<float>(8)));
 vector<vector<float>> stonePara(20, vector<float>(6));
 vector<vector<vector<float>>> stoneBlock(20, vector<vector<float>>(3, vector<float>(8)));
-vector<vector<float>> cupPara(5, vector<float>(7));
+vector<vector<float>> cupPara(15, vector<float>(7));
 vector<vector<float>> seaweedPara(20, vector<float>(6));
 
 float WCSambient[4][4] = 
@@ -25,11 +25,20 @@ void drawScene()
     glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
     drawWCS();
     drawFloor();
-    drawCave();
+    drawSeaSurface();
     drawFishes();
     drawStones();
     drawCups();
     myROV->drawROV();
+    draw_billboard(50, 50, 50, 50);
+    draw_billboard(70, 70, 70, 70);
+    draw_billboard(0, 100, 100, 100);
+    draw_billboard(-70, 70, 50, 50);
+    draw_billboard(-50, 50, 150, 150);
+    draw_billboard(100, 50, 30, 30);
+    draw_billboard(120, 70, 120, 120);
+    draw_billboard(-100, 70, 50, 50);
+    draw_billboard(-120, 50, 70, 70);
 }
 
 void drawWCS()
@@ -91,6 +100,11 @@ void initFloor()
 
 void drawFloor()
 {
+    bool fogIsEnabled =  glIsEnabled(GL_FOG);
+
+    if( fogIsEnabled )
+        glDisable(GL_FOG);
+
     pair<int, int> x = { max( -floorSize.first / 2, (int) myROV -> pos[0] / 10 - viewSize ),
                          min(  floorSize.first / 2, (int) myROV -> pos[0] / 10 + viewSize ) };
 
@@ -120,7 +134,7 @@ void drawFloor()
     //     }
     // }
 
-
+    glEnable(GL_TEXTURE_2D );
 	glTexEnvf( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 	glBindTexture( GL_TEXTURE_2D , textures->id[0] );
 	glMatrixMode( GL_TEXTURE );
@@ -129,39 +143,71 @@ void drawFloor()
 
     static float normal[3] = {0.0, 1.0, 0.0};
     glNormal3fv( normal );
-    static float color[3] = {0.0, 0.0, 0.0};
-    glColor3fv( color );
+    static float color[3] = {1.0, 1.0, 1.0};
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color );
 
     glBegin( GL_POLYGON );
         glTexCoord2f(0.0, 0.0);
-        glVertex3f(x.first*10, 0.0, z.first*10);
+        glVertex3f(-floorSize.first/2 * 10, 0.0, -floorSize.second/2 * 10);
 
-        glTexCoord2f(0.0, (z.second - z.first)/10.0);
-        glVertex3f(x.first*10, 0.0, z.second*10);
+        glTexCoord2f(0.0, floorSize.second / 200 * 10);
+        glVertex3f(-floorSize.first/2 * 10, 0.0, floorSize.second/2 * 10);
 
-        glTexCoord2f((x.second - x.first)/10.0, (z.second - z.first)/10.0);
-        glVertex3f(x.second*10, 0.0, z.second*10);
+        glTexCoord2f(floorSize.first / 200 * 10, floorSize.second / 200 * 10);
+        glVertex3f(floorSize.first/2 * 10, 0.0, floorSize.second/2 * 10);
 
-        glTexCoord2f((x.second - x.first)/10.0, 0.0);
-        glVertex3f(x.second*10, 0.0, z.first*10);
+        glTexCoord2f(floorSize.first / 200 * 10, 0.0);
+        glVertex3f(floorSize.first/2 * 10, 0.0, -floorSize.second/2 * 10);
     glEnd();
 
+    glDisable(GL_TEXTURE_2D );
+
+    if( fogIsEnabled )
+        glEnable(GL_FOG);
 }
 
-void drawCave()
+void drawSeaSurface()
 {
+    bool fogIsEnabled =  glIsEnabled(GL_FOG);
+
+    if( fogIsEnabled )
+        glDisable(GL_FOG);
+
+    glEnable(GL_TEXTURE_2D );
+    glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
-    static float caveColor[4] = { 0.2, 0.2, 0.2, 1.0 };
-    glPushMatrix();
-        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, caveColor );
-        glTranslatef( 528, 0.0, 687 );
-        gluCylinder( cylinder, 100, 100, 1000, 50, 3 );
-        gluCylinder( cylinder, 85, 85, 1000, 50, 3 );
-        gluDisk( circleObj, 85, 100, 50, 1 );
-        glTranslatef( 0.0, 0.0, 1000 );
-        gluDisk( circleObj, 85, 100, 50, 1 );
-    glPopMatrix();
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glTexEnvf( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D , textures->id[1] );
+	glMatrixMode( GL_TEXTURE );
+	glLoadIdentity();
+	glMatrixMode( GL_MODELVIEW );
+
+    static float normal[3] = {0.0, 1.0, 0.0};
+    glNormal3fv( normal );
+    static float color[4] = {1.0, 1.0, 1.0, 0.85};
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color );
+
+    glBegin( GL_POLYGON );
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(-floorSize.first/2 * 10, 400.0, -floorSize.second/2 * 10);
+
+        glTexCoord2f(0.0, floorSize.second / 200 * 10);
+        glVertex3f(-floorSize.first/2 * 10, 400.0, floorSize.second/2 * 10);
+
+        glTexCoord2f(floorSize.first / 200 * 10, floorSize.second / 200 * 10);
+        glVertex3f(floorSize.first/2 * 10, 400.0, floorSize.second/2 * 10);
+
+        glTexCoord2f(floorSize.first / 200 * 10, 0.0);
+        glVertex3f(floorSize.first/2 * 10, 400.0, -floorSize.second/2 * 10);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D );
+    glDisable(GL_BLEND);
     glEnable(GL_CULL_FACE);
+
+    if( fogIsEnabled )
+        glEnable(GL_FOG);
 }
 
 vector<float> randomPos()
