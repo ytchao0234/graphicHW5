@@ -129,20 +129,20 @@ void drawFloor()
 
     static float normal[3] = {0.0, 1.0, 0.0};
     glNormal3fv( normal );
-    static float color[3] = {0.0, 0.5, 0.3};
+    static float color[3] = {0.0, 0.0, 0.0};
     glColor3fv( color );
 
     glBegin( GL_POLYGON );
         glTexCoord2f(0.0, 0.0);
         glVertex3f(x.first*10, 0.0, z.first*10);
 
-        glTexCoord2f(0.0, z.second - z.first);
+        glTexCoord2f(0.0, (z.second - z.first)/10.0);
         glVertex3f(x.first*10, 0.0, z.second*10);
 
-        glTexCoord2f(x.second - x.first, z.second - z.first);
+        glTexCoord2f((x.second - x.first)/10.0, (z.second - z.first)/10.0);
         glVertex3f(x.second*10, 0.0, z.second*10);
 
-        glTexCoord2f(x.second - x.first, 0.0);
+        glTexCoord2f((x.second - x.first)/10.0, 0.0);
         glVertex3f(x.second*10, 0.0, z.first*10);
     glEnd();
 
